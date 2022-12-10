@@ -1,111 +1,91 @@
-const multer = require('multer');
-const sharp = require('sharp');
-const User = require('./../models/userModel');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
-const factory = require('./handlerFactory');
+const jwt = require("jsonwebtoken")
+const bcrypt = require("bcryptjs")
+const asyncHandler = require("express-async-handler")
+const User = require("../models/userModel")
 
-// const multerStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'public/img/users');
-//   },
-//   filename: (req, file, cb) => {
-//     const ext = file.mimetype.split('/')[1];
-//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-//   }
-// });
-const multerStorage = multer.memoryStorage();
 
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new AppError('Not an image! Please upload only images.', 400), false);
-  }
-};
-
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
-
-exports.uploadUserPhoto = upload.single('photo');
-
-exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
-
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
-
-  next();
-});
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach(el => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
-
-exports.getMe = (req, res, next) => {
-  req.params.id = req.user.id;
-  next();
-};
-
-exports.updateMe = catchAsync(async (req, res, next) => {
-  // 1) Create error if user POSTs password data
-  if (req.body.password || req.body.passwordConfirm) {
-    return next(
-      new AppError(
-        'This route is not for password updates. Please use /updateMyPassword.',
-        400
-      )
-    );
-  }
-
-  // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
-  if (req.file) filteredBody.photo = req.file.filename;
-
-  // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-    new: true,
-    runValidators: true
-  });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user: updatedUser
+//@desc Register new user
+//@route POST /api/users
+//@access Public
+const registerUser = asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+        res.status(400)
+        throw new Error("Please fill all the fields")
     }
-  });
-});
 
-exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+    // Check User Exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        res.status(400)
+        throw new Error("User already exists");
+    }
 
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
-});
+    // Hash Password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not defined! Please use /signup instead'
-  });
-};
+    // Create User
+    const user = await User.create({
+        name,
+        email,
+        password: hashedPassword
+    })
 
-exports.getUser = factory.getOne(User);
-exports.getAllUsers = factory.getAll(User);
+    if (user) {
+        res.status(201).json({
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user._id)
+        })
+    } else {
+        res.status(400)
+        throw new Error("Invalid User data")
+    }
 
-// Do NOT update passwords with this!
-exports.updateUser = factory.updateOne(User);
-exports.deleteUser = factory.deleteOne(User);
+})
+
+//@desc Authenticate a user
+//@route POST /api/users/login
+//@access Public
+const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email })
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+        res.status(201).json({
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user._id)
+        })
+    } else {
+        res.status(400)
+        throw new Error("Invalid credentials!")
+    }
+})
+
+//@desc Get user data
+//@route GET /api/users/me
+//@access Public
+const getMe = asyncHandler(async (req, res) => {
+    const { _id, name, email } = await User.findById(req.user.id)
+    res.status(200)
+
+    res.json({ _id, name, email })
+})
+
+// Generate JWT
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: "30d"
+    })
+}
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getMe
+}

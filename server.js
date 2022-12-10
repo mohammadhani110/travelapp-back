@@ -1,44 +1,20 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+const express = require('express');
+const colors = require("colors");
+const dotenv = require('dotenv').config();
+const {errorHandler} = require("./middlewares/errorMiddleware")
+const connectDB = require("./config/db");
+const port = process.env.PORT || 5000
 
-process.on('uncaughtException', err => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
-  process.exit(1);
-});
+connectDB();
 
-dotenv.config({ path: './config.env' });
-const app = require('./app');
+const app =express();
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
 
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-  })
-  .then(() => console.log('DB connection successful!'));
+app.use('/api/goals',require('./routes/goalRoutes'))
+app.use('/api/users',require('./routes/userRoutes'))
 
-const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
-});
+app.use(errorHandler);
 
-process.on('unhandledRejection', err => {
-  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
-});
-
-process.on('SIGTERM', () => {
-  console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
-  server.close(() => {
-    console.log('💥 Process terminated!');
-  });
-});
+app.listen(port,()=>console.log(`App is running on port: ${port}`))
