@@ -23,7 +23,7 @@ const getTour = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: {
-      data: tour,
+      tour,
     },
   });
 });
@@ -51,7 +51,7 @@ const getAllTours = asyncHandler(async (req, res, next) => {
     status: "success",
     results: tours.length,
     data: {
-      data: tours,
+      tours,
     },
   });
 });
