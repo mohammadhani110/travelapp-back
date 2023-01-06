@@ -14,7 +14,28 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
 app.options("*", cors());
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      "http://localhost:3000",
+      "https://travelapp-back.up.railway.app",
+      "https://travelapp-back.cyclic.app",
+    ],
+    default: "http://localhost:3000",
+  })
+);
+// app.all("*", function (req, res, next) {
+//   const origin = cors.origin.includes(req.header("origin").toLowerCase())
+//     ? req.headers.origin
+//     : cors.default;
+//   res.header("Access-Control-Allow-Origin", origin);
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 app.use("/api/goals", require("./routes/goalRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
