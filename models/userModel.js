@@ -16,6 +16,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "please enter a password"],
     },
+    bookings: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Tour",
+    },
   },
   {
     timestamps: true,

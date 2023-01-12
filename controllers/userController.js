@@ -29,6 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password: hashedPassword,
+    bookings: [],
   });
 
   if (user) {
@@ -37,6 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       token: generateToken(user._id),
+      bookings: user.bookings,
     });
   } else {
     res.status(400);
