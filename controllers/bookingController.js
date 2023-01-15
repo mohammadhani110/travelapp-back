@@ -7,8 +7,16 @@ const Booking = require("../models/bookingModel");
 //@route GET /api/goals
 //@access Private
 const getBookings = asyncHandler(async (req, res) => {
-  const bookings = await Booking.find();
-  res.status(200).json(bookings);
+  // const bookings = await Booking.find();
+  await Booking.find({})
+    .populate({ path: "tour", model: "Tour" })
+    .populate({ path: "user", model: "User" })
+    .exec(function (err, bookings) {
+      if (err) return handleError(err);
+      console.log("bookings", bookings);
+      res.status(200).json(bookings);
+    });
+  // res.status(200).json(bookings);
 });
 //@desc createBooking
 //@route POST /api/booking
@@ -52,6 +60,7 @@ const getSingleBooking = asyncHandler(async (req, res, next) => {
     throw new Error("Can't find user");
   }
   console.log(tour, user);
+
   //   const doc = await tour;
 
   //   if (!doc) {
