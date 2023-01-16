@@ -231,7 +231,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"johndoe\",\n    \"email\": \"john@doe.com\",\n\t\"password\": \"pass1234\"\n}"
+							"raw": "{\n\t\"name\": \"admin\",\n    \"email\": \"admin@gmail.com\",\n\t\"password\": \"admin123\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:5000/api/users/register",
@@ -274,7 +274,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"john@gmail.com\",\n\t\"password\": \"12345\"\n}"
+							"raw": "{\n\t\"email\": \"admin@gmail.com\",\n\t\"password\": \"admin123\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:5000/api/users/login",
@@ -300,10 +300,20 @@
 				{
 					"name": "Get Booking",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYzRhMGRhMzVjN2IxY2JkMWQwNTdjMCIsImlhdCI6MTY3MzgzMDY5NiwiZXhwIjoxNjc2NDIyNjk2fQ.f7U9__mdzmatSDuwQlR0OVAtzDZ1RufkfNQMQKHWrsY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/booking",
+							"raw": "http://localhost:5000/api/bookings",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -311,7 +321,46 @@
 							"port": "5000",
 							"path": [
 								"api",
-								"booking"
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTRlZDc4OTBkN2E3MjNhYmI2OWVjYSIsImlhdCI6MTY3MzU0MzUzMCwiZXhwIjoxNjc2MTM1NTMwfQ.VuoTyoaTK-ckj7Xj_1fgG3zF7UxiNqUOlT4Em2BJNCc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"6394ed7890d7a723abb69eca\",\r\n    \"tour\":\"6399d43f0cef9cc11b08c65e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/bookings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bookings"
 							]
 						}
 					},
@@ -347,6 +396,37 @@
 							"path": [
 								"api",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTRlZDc4OTBkN2E3MjNhYmI2OWVjYSIsImlhdCI6MTY3MzU0MzUzMCwiZXhwIjoxNjc2MTM1NTMwfQ.VuoTyoaTK-ckj7Xj_1fgG3zF7UxiNqUOlT4Em2BJNCc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/users/63c4a0da35c7b1cbd1d057c0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"63c4a0da35c7b1cbd1d057c0"
 							]
 						}
 					},
