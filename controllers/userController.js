@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const Tour = require("../models/tourModel");
+const Booking = require("../models/bookingModel");
 
 //@desc Register new user
 //@route POST /api/users
@@ -88,14 +90,24 @@ const getAllUsers = asyncHandler(async (req, res) => {
 //@route GET /api/users/me
 //@access Public
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.find(req.params.id);
-  res.status(200);
-  if (!user) {
-    res.status(400);
-    throw new Error("Something went wrong!");
-  }
+  const user = await User.findById(req.params.id);
+  // console.log("user", user);
+  // if (!user) {
+  //   res.status(400);
+  //   throw new Error("Something went wrong!");
+  // }
+  console.log("bookings", user);
 
-  res.json(user);
+  await User.findById(req.params.id)
+    .populate("bookings")
+    .exec(function (err, bookings) {
+      if (err) return handleError(err);
+      console.log("user bookings", bookings);
+      res.status(200).json(bookings);
+    });
+  // res.status(200).json(bookings);
+  // res.status(200);
+  // res.json(user);
 });
 
 //@desc Update Goal
@@ -145,16 +157,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     .json({ message: "User deleted successfully!", id: req.params.id });
 });
 
-//@desc Get user data
-//@route GET /api/users/me
-//@access Public
-const getMe = asyncHandler(async (req, res) => {
-  const { _id, name, email } = await User.findById(req.user.id);
-  res.status(200);
-
-  res.json({ _id, name, email });
-});
-
 // Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -165,7 +167,7 @@ const generateToken = (id) => {
 module.exports = {
   registerUser,
   loginUser,
-  getMe,
+  // getMe,
   getAllUsers,
   getUser,
   updateUser,

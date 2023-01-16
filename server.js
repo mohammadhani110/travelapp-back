@@ -80,7 +80,7 @@ app.post("/create-checkout-session", async (req, res) => {
 app.use("/api/goals", require("./routes/goalRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/tours", require("./routes/tourRoutes"));
-app.use("/api/booking", require("./routes/bookingRoutes"));
+app.use("/api/bookings", require("./routes/bookingRoutes"));
 
 app.use(errorHandler);
 

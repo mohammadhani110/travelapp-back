@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   registerUser,
   loginUser,
-  getMe,
+  // getMe,
   getAllUsers,
   deleteUser,
   getUser,
@@ -18,6 +18,6 @@ router.get("/", protect, getAllUsers);
 router.get("/:id", protect, getUser);
 router.put("/:id", protect, updateUser);
 router.delete("/:id", protect, deleteUser);
-router.get("/me", protect, getMe);
+// router.get("/:id", protect, getMe);
 
 module.exports = router;

@@ -27,11 +27,12 @@ const createBooking = asyncHandler(async (req, res) => {
     throw new Error("dono bhejo bhai");
   }
 
-  let tour = await Tour.findById(req.body.tour);
+  // let tour = await Tour.findById(req.body.tour);
+
   let user = await User.findByIdAndUpdate(req.body.user, {
     $push: { bookings: req.body.tour },
   });
-  console.log("user", user);
+  console.log("createBooking user", user);
 
   const booking = await Booking.create({
     tour: req.body.tour,

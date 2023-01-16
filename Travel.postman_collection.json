@@ -1,0 +1,358 @@
+{
+	"info": {
+		"_postman_id": "0b2157fb-3f13-48ed-b306-6e798932aae4",
+		"name": "Travel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tours",
+			"item": [
+				{
+					"name": "Get All Tours",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/tours",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"tours"
+							],
+							"query": [
+								{
+									"key": "duration[gte]",
+									"value": "7",
+									"description": "Query for tour duration. Supports gte, lte, gt, lt operators.",
+									"disabled": true
+								},
+								{
+									"key": "price[lte]",
+									"value": "500",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "price",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Use this endpoint to create a new tour."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tour",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/tours/6399d43f0cef9cc11b08c65e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"tours",
+								"6399d43f0cef9cc11b08c65e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Tour",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTRlZDc4OTBkN2E3MjNhYmI2OWVjYSIsImlhdCI6MTY3MDc1NTA0MiwiZXhwIjoxNjczMzQ3MDQyfQ.yDzo3cllESzqI29KvaPEsRfuubBis1lzoeUSB-grVvw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"The Sea Explorer\",\n    \"duration\": 7,\n    \"maxGroupSize\": 15,\n    \"difficulty\": \"easy\",\n    \"price\": 201,\n    \"summary\": \"Exploring the jaw-dropping US east coast by foot and by boat\",\n    \"imageCover\": \"https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg\",\n    \"user\":\"6394ed7890d7a723abb69eca\",\n    \"location\":\"karachi\"    \n\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/tours",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"tours"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tour",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYzRhMGRhMzVjN2IxY2JkMWQwNTdjMCIsImlhdCI6MTY3MzgzMDY5NiwiZXhwIjoxNjc2NDIyNjk2fQ.f7U9__mdzmatSDuwQlR0OVAtzDZ1RufkfNQMQKHWrsY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"63c4a0da35c7b1cbd1d057c0\",\r\n    \"name\": \"The Sea Explorer updated\",\r\n    \"duration\": 7,\r\n    \"maxGroupSize\": 15,\r\n    \"difficulty\": \"easy\",\r\n    \"price\": 201,\r\n    \"summary\": \"Exploring the jaw-dropping US east coast by foot and by boat\",\r\n    \"imageCover\": \"https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg\",\r\n    \"user\":\"6394ed7890d7a723abb69eca\",\r\n    \"location\":\"karachi\"    \r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/tours/6399d43f0cef9cc11b08c65e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"tours",
+								"6399d43f0cef9cc11b08c65e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tour",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTRlZDc4OTBkN2E3MjNhYmI2OWVjYSIsImlhdCI6MTY3MzgyNzU1NiwiZXhwIjoxNjc2NDE5NTU2fQ.AS3cHvMPMLc1hs4IpxVkMEwt6z_n3NHSEWTS3qM2_VU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/tours/6395c2eabd48c13ad434b892",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"tours",
+								"6395c2eabd48c13ad434b892"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**You can get all tours, create new ones, and edit and delete tours**. There are also special endpoints for some special requirements.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Sign Up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"johndoe\",\n    \"email\": \"john@doe.com\",\n\t\"password\": \"pass1234\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"john@gmail.com\",\n\t\"password\": \"12345\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Get Booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/booking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTRlZDc4OTBkN2E3MjNhYmI2OWVjYSIsImlhdCI6MTY3MzgyNzU1NiwiZXhwIjoxNjc2NDE5NTU2fQ.AS3cHvMPMLc1hs4IpxVkMEwt6z_n3NHSEWTS3qM2_VU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
