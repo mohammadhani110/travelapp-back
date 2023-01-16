@@ -88,41 +88,82 @@ const createTour = asyncHandler(async (req, res) => {
   });
 });
 
-// exports.deleteOne = (Model) =>
-//   asyncHandler(async (req, res, next) => {
-//     const doc = await Model.findByIdAndDelete(req.params.id);
+//@desc Delete Goal
+//@route DELETE /api/goals
+//@access Private
+const deleteTour = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
 
-//     if (!doc) {
-//       return next(new AppError("No document found with that ID", 404));
-//     }
+  // Check for user
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+  // Check if logged in User matches the goal user
+  if (!user.isAdmin) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
 
-//     res.status(204).json({
-//       status: "success",
-//       data: null,
-//     });
-//   });
+  const tour = await Tour.findById(req.params.id);
 
-// exports.updateOne = (Model) =>
-//   asyncHandler(async (req, res, next) => {
-//     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//       runValidators: true,
-//     });
+  if (!tour) {
+    res.status(400);
+    throw new Error("No tour found with that ID");
+  }
 
-//     if (!doc) {
-//       return next(new AppError("No document found with that ID", 404));
-//     }
+  await tour.remove();
+  res.status(200).json({
+    status: "success",
+    data: {
+      tour,
+      message: "Tour deleted successfully",
+    },
+  });
+});
 
-//     res.status(200).json({
-//       status: "success",
-//       data: {
-//         data: doc,
-//       },
-//     });
-//   });
+//@desc Update Goal
+//@route PUT /api/goals
+//@access Private
+
+const updateTour = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  // Check for user
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  // Check if logged in User matches the goal user
+  if (!user.isAdmin) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
+  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!tour) {
+    res.status(400);
+    throw new Error("No tour found with that ID");
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      tour,
+      message: "Tour updated successfully",
+    },
+  });
+});
 
 module.exports = {
   getAllTours,
   getTour,
   createTour,
+  updateTour,
+  deleteTour,
 };

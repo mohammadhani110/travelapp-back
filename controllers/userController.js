@@ -73,6 +73,81 @@ const loginUser = asyncHandler(async (req, res) => {
 //@desc Get user data
 //@route GET /api/users/me
 //@access Public
+const getAllUsers = asyncHandler(async (req, res) => {
+  const user = await User.find();
+  res.status(200);
+  if (!user) {
+    res.status(400);
+    throw new Error("Something went wrong!");
+  }
+
+  res.json(user);
+});
+
+//@desc Get user data
+//@route GET /api/users/me
+//@access Public
+const getUser = asyncHandler(async (req, res) => {
+  const user = await User.find(req.params.id);
+  res.status(200);
+  if (!user) {
+    res.status(400);
+    throw new Error("Something went wrong!");
+  }
+
+  res.json(user);
+});
+
+//@desc Update Goal
+//@route PUT /api/goals
+//@access Private
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  // Check for user
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  // Check if logged in User matches the goal user
+  if (!user.isAdmin) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
+  const upadatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  res.status(200).json(upadatedGoal);
+});
+//@desc Delete Goal
+//@route DELETE /api/goals
+//@access Private
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  // Check for user
+  // Check if logged in User matches the goal user
+  if (!user.isAdmin) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  await goal.remove();
+  res
+    .status(200)
+    .json({ message: "User deleted successfully!", id: req.params.id });
+});
+
+//@desc Get user data
+//@route GET /api/users/me
+//@access Public
 const getMe = asyncHandler(async (req, res) => {
   const { _id, name, email } = await User.findById(req.user.id);
   res.status(200);
@@ -91,4 +166,8 @@ module.exports = {
   registerUser,
   loginUser,
   getMe,
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser,
 };
