@@ -78,13 +78,20 @@ const createTour = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("some fields are missing in the request body");
   }
-  const tour = await Tour.create(req.body);
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      data: tour,
-    },
+  const tour = await Tour.create(req.body).then((result) => {
+    console.log("Result", result);
+    res
+      .status(201)
+      .json({
+        status: "success",
+        data: {
+          tour: result,
+        },
+      })
+      .catch((e) => {
+        res.status(400);
+        throw new Error("unable to create tour");
+      });
   });
 });
 
